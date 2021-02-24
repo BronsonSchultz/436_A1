@@ -40,6 +40,36 @@ public class ClientThread extends Thread{
         }
     }
 
+    protected void executeCommand(String command){
+        if(isValidCommand(command)){
+            switch (command){
+                case "/help": {
+                    sendMsgToClient("""
+                            /help --\s
+                            /help - this list\s
+                            /list - list all available chatrooms\s
+                            /create <name> - create a new chatroom with the given name\s
+                            /join <name> - join the chatroom of the given name\s
+                            /leave <name> - leave a joined chatroom of the given name\s
+                            /exit - exit the chatroom program completely""");
+                }
+                case "/list": {
+                    //TODO
+
+                }
+                case "/create <name>": {
+
+                }
+                case "/join <name>": {
+
+                }
+                case "leave <name>": {
+
+                }
+            }
+        }
+    }
+
     protected void loginUser() {
         sendMsgToClient("Please enter your name: ");
         try {
@@ -59,8 +89,8 @@ public class ClientThread extends Thread{
             loginUser();
             String msgFromClient;
            do {
-               System.out.println(socket.isClosed());
                 msgFromClient = readFromClient.readLine();
+                executeCommand(msgFromClient);
                 System.out.println(msgFromClient);
             } while (!msgFromClient.equals("/exit"));
 
