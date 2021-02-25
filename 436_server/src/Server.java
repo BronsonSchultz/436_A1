@@ -11,6 +11,11 @@ public class Server {
 
     public Server(int port){
         this.port = port;
+        chatrooms = new HashMap<>();
+    }
+
+    public HashMap<String, String> getChatrooms(){
+        return chatrooms;
     }
 
     protected void listenForClients(ServerSocket serverSocket){

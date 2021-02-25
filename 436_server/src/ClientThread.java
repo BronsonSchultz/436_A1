@@ -13,6 +13,7 @@ public class ClientThread extends Thread{
     BufferedReader readFromClient;
     Server server;
     String username;
+    String currentRoom;
 
     public ClientThread(Server server, Socket socket){
         this.server = server;
@@ -57,17 +58,42 @@ public class ClientThread extends Thread{
                     //TODO
 
                 }
-                case "/create <name>": {
-
+                case "/create": {
+                    sendMsgToClient("Name of the new room?: ");
+                    try {
+                        createRoom(readFromClient.readLine());
+                    } catch (IOException e){
+                        System.out.println(e.getMessage());
+                    }
                 }
-                case "/join <name>": {
 
+                case "/join": {
+                    sendMsgToClient("which room?: ");
+                    try {
+                        currentRoom = readFromClient.readLine();
+                    } catch (IOException e){
+                        System.out.println(e.getMessage());
+                    }
                 }
-                case "leave <name>": {
+                case "leave": {
 
                 }
             }
         }
+    }
+
+    protected void createRoom(String name){
+        server.getChatrooms().put(name,"");
+    }
+
+    protected void saveMsgToRoom(String roomName, String message){
+        String roomHistory = server.getChatrooms().get(roomName);
+        roomHistory = roomHistory + message + "\n";
+        server.getChatrooms().put(roomName, roomHistory);
+    }
+
+    protected void joinChatroom(String name){
+
     }
 
     protected void loginUser() {
@@ -91,7 +117,9 @@ public class ClientThread extends Thread{
            do {
                 msgFromClient = readFromClient.readLine();
                 executeCommand(msgFromClient);
-                System.out.println(msgFromClient);
+
+
+                //System.out.println(msgFromClient);
             } while (!msgFromClient.equals("/exit"));
 
         } catch (IOException e){
